@@ -1,0 +1,150 @@
+---
+title: Kurtis Merrill's Resume
+author: Kurtis Merrill
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    css: ['css/custom_resume.css', 'css/styles.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: true
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+library(tidyverse)
+library(glue)
+
+# Set this to true to have links turned into footnotes at the end of the document
+PDF_EXPORT <- FALSE
+
+# Holds all the links that were inserted for placement at the end
+links <- c()
+
+source('parsing_functions.R')
+
+
+# First let's get the data, filtering to only the items tagged as
+# Resume items
+position_data <- read_csv('positions.csv') %>% 
+  filter(in_resume) %>% 
+  mutate(
+    # Build some custom sections by collapsing others
+    section = case_when(
+      section %in% c('research_positions', 'industry_positions') ~ 'positions', 
+      section %in% c('data_science_writings', 'by_me_press') ~ 'writings',
+      TRUE ~ section
+    )
+  ) 
+
+```
+
+
+Aside
+================================================================================
+
+
+![logo](beta_dist.png){width=100%}
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+
+
+- <i class="fa fa-envelope"></i> kurtis.merrill@hotmail.com
+
+- <i class="fa fa-github"></i> kurtismerrill22-art
+- <i class="fa fa-link"></i> github.com/kurtismerrill22-art
+- <i class="fa fa-phone"></i> (801) 390-8630
+
+
+
+Language Skills {#skills}
+--------------------------------------------------------------------------------
+
+
+```{r}
+skills <- tribble(
+  ~skill,               ~level,
+  "R",                  5,
+  "Javascript (d3.js)", 4.5,
+  "Python",             4,
+  "Bash",               3.5,
+  "SQL",                3,
+  "C++",                3,
+  "AWK",                3
+)
+build_skill_bars(skills)
+```
+
+
+
+Projects
+
+--------------------------------------------------------------------------------
+
+- Monty Hall R Package
+- R Markdown Website Project
+- Data Analytics Coursework
+- Exoplanet Research Project
+
+
+More info {#more-info}
+--------------------------------------------------------------------------------
+
+See GitHub profile for additional projects and coursework.
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+Note: Some projects may be simplified or adapted for educational purposes as part of a university assignment.
+
+
+
+
+Main
+================================================================================
+
+Kurtis Merrill {#title}
+--------------------------------------------------------------------------------
+
+```{r}
+intro_text <- "
+Graduate student, experienced teacher, and aspiring public sector data analyst with interests in public policy, statistical analysis, R programming, and data visualization. This resume was generated automatically using R Markdown and data stored in a CSV file.
+"
+
+
+cat(sanitize_links(intro_text))
+```
+
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('education')
+```
+
+
+
+Selected Positions {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('positions')
+```
+
+Selected Writing {data-icon=newspaper}
+--------------------------------------------------------------------------------
+
+
+```{r}
+position_data %>% print_section('writings')
+```
+
+
